@@ -1,0 +1,117 @@
+	<!-- header -->
+	<div class="agileits_header">
+		<div class="container">
+			<div class="w3l_offers">
+				<p>Minimum Of ₱1000 For Free Delivery </p>
+			</div>
+			<div class="agile-login">
+				<ul>
+					<!-- my cart -->
+					<li>
+						<a href="" class="fa fa-history" id="history" data-toggle="modal" data-target="#myModal1" style="display:none"></a>
+						<a href="{% url 'carts' %}" class="fa fa-shopping-bag"  data-toggle="modal"><sup class="badge"></sup></a>
+					</li>
+					<!-- Modal -->
+					<div class="modal fade" id="myModal1" role="dialog" style="display:none">
+						<div class="modal-dialog modal-sm">
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+								</div>
+								<div id="waiting_confirmation" class="modal-body">
+									<h3>Transaction History</h3>
+									<table id="thistory" style="width:100%;text-align:left"><thead><tr><th>Transaction #</th><th>Status</th><th>&nbsp</th></tr></thead><tbody></tbody></table>
+								</div>
+								{% comment %} <div id="footer" style="color:white">
+									<button type="button" class="btn btn-success btn-md"><a href="{% url 'products' %}" style="color:white">Start Shopping</a></button>
+								</div> {% endcomment %}
+							</div>
+						</div>
+					</div>
+					<!-- //Modal -->
+					<!-- // my cart -->
+
+					<!-- USER ACCOUNTT -->
+					<li><a href="{% url 'logout' %}" class="fa fa-user"><span style="font-family: sans-serif;">&nbsp;Logout</span></a></li>
+					<!--USER ACCOUNT -->
+				</ul>
+			</div>
+
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+	<div class="logo_products">
+		<div class="container">
+			<div class="w3ls_logo_products_left1">
+				<ul class="phone_email">
+					<li><i class="fa fa-phone" aria-hidden="true"></i>Order online or call us : +6396-7294-8353</li>
+				</ul>
+			</div>
+			<div class="w3ls_logo_products_left">
+				<h1><a href="index.html">Pakibuy</a></h1>
+			</div>
+			{% comment %} <div class="w3l_search">
+				<form action="#" method="post">
+					<input type="search" name="Search" placeholder="Search for a Product..." required="">
+					<button type="submit" class="btn btn-default search" aria-label="Left Align">
+						<i class="fa fa-search" aria-hidden="true"> </i>
+					</button>
+					<div class="clearfix"></div>
+				</form>
+			</div> {% endcomment %}
+
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+	<!-- //header -->
+    <div id="hdata">
+        {% for ass in backends.associated %}
+            <input type="hidden" value="{{ ass.extra_data.email }}" id="cust_email"/>
+        {% endfor %}
+        {% csrf_token %}
+    </div>
+<script>
+$(document).ready(function(){
+	const base_url = 'http://localhost:8000/api/cart';
+    const email = document.getElementById('cust_email').value;
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+	$.ajax({
+		url :  base_url + '/list/' + email + '/100/0',
+		type: 'GET',
+		success : function(data, textStatus, xhr){
+			if(xhr.status === 200){
+				$('#history').css({'display':'inline'});
+				$.each(data,function(i,item){
+					var status;
+					var receipt_button = '';
+					switch(data[i].status){
+						case 1:
+							status= 'SHOPPING'
+							break;
+						case 2:
+							status= 'PAYMENT'
+							break;
+						case 3:
+							status= 'SHIPPING'
+							receipt_button = '<a href="/cart/print/' + data[i].id + '" style="color:black" class="button">Reciept</a>'
+							break;
+						case 4:
+							status= 'RECIEVED'
+							receipt_button = '<a href="/cart/print/' + data[i].id + '" style="color:black" class="button">Reciept</a>'
+							break;
+						case 5:
+							status= 'REJECTED'
+							break;
+					}
+					$('#thistory tbody').append('<tr><td>Order : ' + data[i].id + '</td> <td>' + status + '</td>' + 
+					'<td><a href="/cart/view/' + data[i].id + '" style="color:black" class="button">View</a></td>' + 
+					'<td>' + receipt_button + '</td>' + 
+					'</tr>')
+				});
+			}
+		}
+	});
+});
+</script>

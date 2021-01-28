@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	{% comment %} <div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+			</ol>
+		</div>
+	</div> {% endcomment %}
+	<!-- navigation -->
+	<div class="navigation-agileits">
+		<div class="container">
+			<nav class="navbar navbar-default">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header nav_2">
+					<button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div> 
+				<div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+					<ul class="nav navbar-nav">
+						<!-- Home -->
+						<li class="active"><a href="/" class="act">Home</a></li>
+						<!-- //Home  -->
+						
+						<!-- Household -->
+						<li class="dropdown">
+							<a href="/product/specific/0">Household<b></b></a>
+						</li>
+						<!-- //Household  -->
+
+						<!-- Personal Care -->
+						<li class="dropdown">
+							<a href="/product/specific/1">Personal Care<b></b></a>
+						</li>
+						<!-- //Personal Care  -->
+
+						<!--  Baby Care -->
+						<li class="dropdown">
+							<a href="/product/specific/2">Baby Care<b></b></a>
+						</li>
+						<!-- //Baby Care -->
+
+						<!-- Cooking -->
+						<li class="dropdown">
+							<a href="/product/specific/3">Cooking<b></b></a>
+						</li>
+						<!-- //Cooking -->
+
+						<!-- Canned Goods -->
+						<li class="dropdown">
+							<a href="/product/specific/4">Canned Goods<b></b></a>
+						</li>
+						<!-- //Canned Goods -->
+
+						<!-- Beverages -->
+						<li class="dropdown">
+							<a href="/product/specific/5">Beverages<b></b></a>
+						</li>
+						<!-- //Beverages -->
+						
+						<!-- Snacks -->
+						<li class="dropdown">
+							<a href="/product/specific/6">Snacks<b></b></a>
+						</li>
+						<!-- //Snacks -->
+						
+						<!--Fresh -->
+						<li class="dropdown">
+							<a href="/product/specific/7">Fresh<b></b></a>
+						</li>
+						<!-- //Fresh -->
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</div>
+
+    <ul id="demo1">
+		<li>
+			<img src="{% static 'app/images/44.jpg' %}" alt="" />
+			<!--Slider Description example-->
+			<div class="slide-desc">
+			</div>
+		</li>
+		<li>
+			<img src="{% static 'app/images/22.jpg' %}" alt="" />
+			<div class="slide-desc">
+			</div>
+		</li>
+
+		<li>
+			<img src="{% static 'app/images/11.jpg' %}" alt="" />
+			<div class="slide-desc">
+			</div>
+		</li>
+	</ul>
+
+    <div class="newline">
+		<div class="container">
+			<div class="col-sm-3">
+				<img src="{% static 'app/images/delivery.png' %}" alt="delivery" class="img-responsive"><span>Next Day Delivery</span>
+			</div>
+			<div class="col-sm-3">
+				<img src="{% static 'app/images/fragile.png' %}" alt="product" class="img-responsive"><span>Affordable Product</span>
+			</div>
+			<div class="col-sm-3">
+				<img src="{% static 'app/images/credit-card.png' %}" alt="credit-card" class="img-responsive"><span>Secure Payment</span>
+			</div>
+			<div class="col-sm-3">
+				<img src="{% static 'app/images/store.png' %}" alt="store" class="img-responsive"><span>Personal Shopper</span>
+			</div>
+		</div>
+	</div>
+
+    	<!-- top-brands -->
+	<div class="top-brands">
+		<div class="container">
+			<h2>Top selling offers</h2>
+			<div class="grid_3 grid_5">
+				<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+					<ul id="myTab" class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#expeditions" id="expeditions-tab" role="tab" data-toggle="tab" aria-controls="expeditions" aria-expanded="true">Latest offers</a></li>
+						<li role="presentation"><a href="#tours" role="tab" id="tours-tab" data-toggle="tab" aria-controls="tours">Today Offers</a></li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div role="tabpanel" class="tab-pane fade in active" id="expeditions" aria-labelledby="expeditions-tab">
+							<div class="agile-tp">
+								<h5>Advertised this week</h5>
+								<p class="w3l-ad">We've pulled together all our advertised offers into one place, so you won't miss out on a great deal.</p>
+							</div>
+							<!-- ADVERTISED OFFERS -->
+							<div class="agile_top_brands_grids">
+								<div id="featured"></div>
+								<div class="clearfix"></div>
+							</div>
+							<!-- //ADVERTISED OFFERS -->
+						</div>
+						<div role="tabpanel" class="tab-pane fade" id="tours" aria-labelledby="tours-tab">
+							<div class="agile-tp">
+								<h5>This week</h5>
+								<p class="w3l-ad">We've pulled together all our advertised offers into one place, so you won't miss out on a great deal.</p>
+							</div>
+
+							<div class="agile_top_brands_grids">
+								<div id="latest"></div>
+								<div class="clearfix"> </div>
+							</div>
+							<!-- //TODAY OFFERS -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //top-brands -->
+
+<!-- main slider-banner -->
+<script src="{% static 'app/js/skdslider.min.js' %}"></script>
+<link href="{% static 'app/css/skdslider.css' %}" rel="stylesheet">
+<script type="text/javascript">
+	const base_url = 'http://localhost:8000'
+
+	function redirect(url){
+		window.open('/product/'+url);
+	}
+
+	jQuery(document).ready(function(){
+		jQuery('#demo1').skdslider({'delay':5000, 'animationSpeed': 2000,'showNextPrev':true,'showPlayButton':true,'autoSlide':true,'animationType':'fading'});
+
+		jQuery('#responsive').change(function(){
+			$('#responsive_wrapper').width(jQuery(this).val());
+		});
+
+		//load latest items
+		$.ajax({
+			url: base_url + '/api/product/featured',
+			type: 'GET',
+			success: function(data){
+				$.each(data,function(index,val){
+
+					var fItems = '<div class="col-md-4 top_brand_left" style="margin-bottom:20px;">' + 
+									'<div class="hover14 column">' +
+										'<div class="agile_top_brand_left_grid">' +
+											'<div class="agile_top_brand_left_grid_pos"></div>' +
+										'<div class="agile_top_brand_left_grid1">' +
+											'<figure>' +
+												'<div class="snipcart-item block" >' +
+													'<div class="snipcart-thumb">' +
+														'<a href="/product/' + val.sku + '">' +
+															'<img src="' + val.cover_photo + '" style="max-height:100px;" />' +
+														'</a>' +
+													'<p>' + val.name +'</p>' +
+													'<h4>₱ ' + val.price + '</h4>'	+
+												'<div class="snipcart-details top_brand_home_details">' +
+													'<input type="button" name="submit" value="View Item" onclick="redirect(' + val.sku + ')" class="button" />' +
+												'</div>' +
+												'<div>' +
+											'</figure>' +
+										'</div>' +
+									'</div>' +
+								'</div>'		
+
+					$('#latest').append(fItems);
+				});
+			}
+		})
+
+		//load featured items
+		$.ajax({
+			url: base_url + '/api/product/latest',
+			type: 'GET',
+			success: function(data){
+				$.each(data,function(index,val){
+
+					var fItems = '<div class="col-md-4 top_brand_left" style="margin-bottom:20px;">' + 
+									'<div class="hover14 column">' +
+										'<div class="agile_top_brand_left_grid">' +
+											'<div class="agile_top_brand_left_grid_pos"></div>' +
+										'<div class="agile_top_brand_left_grid1">' +
+											'<figure>' +
+												'<div class="snipcart-item block" >' +
+													'<div class="snipcart-thumb">' +
+														'<a href="/product/' + val.sku + '">' +
+															'<img src="' + val.cover_photo + '" style="max-height:100px;" />' +
+														'</a>' +
+													'<p>' + val.name +'</p>' +
+													'<h4>₱ ' + val.price + '</h4>'	+
+												'<div class="snipcart-details top_brand_home_details">' +
+													'<input type="button" name="submit" value="View Item" onclick="redirect(' + val.sku + ')" class="button" />' +
+												'</div>' +
+												'<div>' +
+											'</figure>' +
+										'</div>' +
+									'</div>' +
+								'</div>'		
+
+					$('#featured').append(fItems);
+				});
+			}
+		})
+
+	});
+</script>	
+<!-- //main slider-banner --> 
+{% endblock content %}

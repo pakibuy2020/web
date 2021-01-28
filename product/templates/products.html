@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% comment %} {% for ass in backends.associated %}
+    {{ ass.extra_data.name  }}
+    {{ ass.extra_data.email  }}
+    <p>Signed in via:  {{ ass.provider }} </p>
+    <img src="{{ass.extra_data.picture.data.url}}" alt="" width="150" height="150" style="border-radius: 50%">
+{% endfor %} {% endcomment %}
+	<div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+				<li class="active">All Items</li>
+			</ol>
+		</div>
+	</div>
+
+    <div class="container" style="margin-top:50px;margin-bottom:50px">
+        <div class="row">
+        {% for product in products %}
+            <div class="col-sm-6 col-md-4" style='margin-bottom:20px;'>
+            	<div class="hover14 column">
+							<div class="agile_top_brand_left_grid">
+								<div class="agile_top_brand_left_grid1">
+									<figure>
+										<div class="snipcart-item block">
+											<div class="snipcart-thumb">
+												{% if product.cover_photo %}
+													<a href="/product/{{product.sku}}"><img title=" " alt=" " src="{{product.cover_photo.url}}" style="max-height:100px;"></a>
+												{% else %}
+													<a href="/product/{{product.sku}}"><img title=" " alt=" " src="#" style="max-height:100px;"></a>	
+												{% endif %}
+													
+												<p>{{product.name}}</p>
+												<h4>₱{{product.price}}</h4>
+											</div>
+											<div class="snipcart-details top_brand_home_details">
+												<input type="submit" name="submit" value="View Item" onclick="window.open('/product/{{product.sku}}')" class="button" />
+											</div>
+										</div>
+									</figure>
+								</div>
+							</div>
+						</div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock content %}
+

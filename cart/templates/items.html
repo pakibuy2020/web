@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+                <li class="active">
+                    Items
+                </li>
+			</ol>
+		</div>
+	</div>
+	<!-- //breadcrumbs -->
+
+	{% comment %} content {% endcomment %}
+	<div class="container mb-4"  id="cartdetail">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="caritems">
+                        <thead>
+                            <tr>
+                                <th scope="col"> </th>
+                                <th scope="col">Product</th>
+                                <th scope="col" class="text-center">Quantity</th>
+                                <th scope="col" class="text-right">Price</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Sub-Total</td>
+                                <td class="text-right" id="stotal">Php. 0.00</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Less</td>
+                                <td class="text-right" id="less">Php. - 0.00</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Total</strong></td>
+                                <td class="text-right" id="ntotal"><strong>Php. 0.00</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col mb-2" style="margin-bottom:200px;" id="actionBtns">
+                <div class="row">
+                    <div class="col-sm-12  col-md-6">
+                        <button class="btn btn-lg btn-block btn-light" onclick="shopping()">Continue Shopping</button>
+                    </div>
+                    <div class="col-sm-12 col-md-6 text-right">
+                        <button class="btn btn-lg btn-block btn-success text-uppercase" onclick="proceed()">Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cartdetailmessage" class="container mb-4" style="display:none">
+        <div class="row">
+            <i style="text-align:center">No items found</i>
+        </div>
+    </div>
+
+<div id="hdata">
+{% for ass in backends.associated %}
+   <input type="hidden" value="{{ ass.extra_data.email }}" id="cust_email"/>
+{% endfor %}
+{% csrf_token %}
+</div>
+<script>
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'PHP',
+        minimumFractionDigits: 2
+    })
+	const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+	const email = document.getElementById('cust_email').value;
+    const base_url = 'http://localhost:8000/api/cart';
+
+    $(document).ready(function(){
+        var nUrl = base_url + '/' + email
+        if({{is_view}}){
+            nUrl = base_url + '/view/' + email + '/' + {{cart_id}}
+            $('#actionBtns').hide()
+        }
+
+        $.ajax({
+            url : nUrl,
+            type: 'GET',
+            success: function(data){
+                var status = data.status;
+                if(status == 1){
+                    $('#actionBtns').show();
+                }
+            }
+        }).done(function(data, statusText, xhr){
+            var sub = 0;
+            var net = 0;               
+            $.each(data.cartitem,function(i,item){
+                $('#cartdetailmessage').hide();
+                    
+                let p = data.cartitem[i].product.price;
+                let q = data.cartitem[i].qty;
+
+                sub = sub + (p * q);
+                net = sub;
+
+                qty = `<td class="text-center"><p>${q}</p></td>`;
+                image = `<td><img src="${data.cartitem[i].product.cover_photo}" width="50" height="50"/></td>`;
+                prod_name = `<td>${data.cartitem[i].product.name}</td>`;
+                    
+                price = `<td class="text-right">${formatter.format(p)}</td>`;
+                remove=`<td class="text-right">
+                    <button class="btn btn-sm btn-info" onclick="viewItem(${data.cartitem[i].product.sku})"><i class="fa fa-search"></i> </button>
+                    <button class="btn btn-sm btn-warning" onclick="removeItem(${data.cartitem[i].id})"><i class="fa fa-trash"></i> </button>
+                    </td>`;
+
+                rowItem = $('<tr>'+image+prod_name+qty+price+remove + '</tr>');
+                $('#caritems tr:first').after(rowItem);
+
+                    //update total
+                $("td#stotal").html(`${formatter.format(sub)}`);
+
+                if(sub >= 1000){
+                    $("td#less").html('<b>Free shipping</b>');
+                }else{
+                    $("td#less").html('<b style="color:red">Standard Rate</b>');
+                }
+                   $("td#ntotal").html(`<strong>${formatter.format(net)}</strong>`);
+                })
+                $('#hdata').append(`<input type="hidden" value="${data.id}" id="cartid"/>`);
+            }).fail(function(){
+                $('#cartdetail').hide();
+                $('#cartdetailmessage').show();
+            })
+    })
+    function viewItem(productItem){
+        location.href=`http://localhost:8000/product/${productItem}`;
+    }
+    function removeItem(itemId){
+		$.ajax({
+			url : base_url + '/item/remove/' + itemId,
+			type: 'DELETE',
+			beforeSend: function(xhr){
+				xhr.setRequestHeader('X-CSRFToken',csrftoken);
+			}
+		}).done(function(){
+			alert('removed to cart');
+			location.reload();
+		}).fail(function(){
+			alert('Error in removing to cart')
+		})
+    }
+    function proceed(){
+        location.href=`/cart/checkout`;
+    }
+    function shopping(){
+        location.href=`/product`;
+    }
+</script>
+{% endblock content %}

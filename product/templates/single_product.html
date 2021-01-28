@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+				<li class="active">{{product.category.name}}</li>
+				<li class="active">{{product.name}}</li>
+			</ol>
+		</div>
+	</div>
+	<!-- //breadcrumbs -->
+
+    <!-- Single page -->
+	<div class="singlepage">
+		<form action="" method="POST">
+		<div class="container">
+			<div class="col-sm-4">
+				<div class="agileinfo_single_left">
+					{% if product.cover_photo %}
+						<img src="{{product.cover_photo.url}}" alt="{{product.name}}" class="img-responsive">
+					{% else %}
+						<img src="" alt="{{product.name}}" class="img-responsive">	
+					{% endif %}
+					
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="col-sm-12" id="status">
+					<h4>{{product.name}}</h4>
+					<h4>₱{{product.price}}</h4>
+					{% if product.current_stock >= 1 %}
+						<span style="color: #00cc00;">{{product.current_stock}} stock(s) left</span>
+					{% else %}
+						<span style="color: red;"><b>Out of stock</b></span>
+					{% endif %}
+                    <p>{{product.description|safe}}</p><br/>
+				</div>
+				{% if product.current_stock >= 1 %}
+				<div class="col-sm-12" id="informations">
+					<div class="col-sm-4" id="quan">
+						<p>Quantity</p>
+						<div class="col-sm-12" id="counter">
+							<div class="col-sm-4"><i class="fa fa-minus" onclick="decrementValue()"></i></div>
+							<div class="col-sm-4"><p id="number">1</p></div>
+							<div class="col-sm-4"><i class="fa fa-plus" onclick="incrementValue()"></i></div>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<a href="#" class="btn btn-primary btn-lg" onclick="remoteItemCart()" id="rmcrtbtn">Remove Item</a>
+						<a href="#" class="btn btn-primary btn-lg" onclick="updateItemCart()" id="upcrtbtn">Update Qty</a>
+						<a href="#" class="btn btn-primary btn-lg" onclick="addToCart()" id="addcrtbtn">Add To Cart</a>			
+					</div>
+				</div>
+				{% endif %}
+				<div class="col-sm-12" id="sku">
+					<p>CATEGORY: 	{{product.category.name}}</p>
+					<p id="psku">SKU: {{product.sku}}</p>
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
+
+<!-- //Single page -->
+<div id="prop">
+	<input type="hidden" value="{{product.sku}}" id="hsku"/>
+</div>	
+{% for ass in backends.associated %}
+   <input type="hidden" value="{{ ass.extra_data.email }}" id="cust_email"/>
+{% endfor %}
+{% csrf_token %}
+
+<script>
+	const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+	const email = document.getElementById('cust_email').value;
+	const sku = document.getElementById('hsku').value;
+	const base_url = 'http://localhost:8000/api/cart';
+	
+	$( document ).ready(function() {
+		$.ajax({
+			url: base_url + '/checkitem/' + email + '/' + sku,
+			type: 'GET',
+		}).done(function(data, statusText, xhr){
+			var status = xhr.status; 
+			//item is in cart already
+			console.log(JSON.stringify(data));
+			if(data !== undefined && data.qty > 0 && status == 200){
+				//add hidden to put the cartitem id
+				let str = '<input type="hidden" value="' + data.id + '" id="idcartitem"/>';
+				$('#prop').append(str)
+				$('#addcrtbtn').css('display','none');
+				//update qty
+				$('#number').html(data.qty)
+			}else{
+				//just show add to cart
+				//hide remove from cart and update
+				$('#rmcrtbtn').css('display','none');
+				$('#upcrtbtn').css('display','none');
+			}
+		})
+	});
+
+	function incrementValue()
+	{
+		var value = parseInt(document.getElementById('number').textContent);
+		value = isNaN(value) ? 0 : value;
+		stock = {{product.current_stock}}
+
+		if(stock > value){
+			document.getElementById('number').innerHTML = ++value;
+		}
+	}
+	function decrementValue()
+	{
+		var value = parseInt(document.getElementById('number').textContent);
+		value = isNaN(value) ? 0 : value;
+		var c = --value;
+		if(c >= 1){
+			document.getElementById('number').innerHTML = c;
+		}
+	}
+	function addToCart(){
+		var qty = document.getElementById('number').textContent;
+		var data = {
+				"customer_email" : email,
+				"qty": qty,
+				"product_sku": sku
+			};
+		$.ajax({
+			url : base_url + '/item/add',
+			type: 'POST',
+			beforeSend: function(xhr){
+				xhr.setRequestHeader('content-type','application/json');
+				xhr.setRequestHeader('X-CSRFToken',csrftoken);
+			},
+			data: JSON.stringify(data)
+		}).done(function(){
+			alert('Added to cart');
+			location.href="http://localhost:8000/product/"
+		}).fail(function(){
+			alert('Error in adding to cart')
+		})
+	}
+	function remoteItemCart(){
+		var id = document.getElementById('idcartitem').value;
+		$.ajax({
+			url : base_url + '/item/remove/' + id,
+			type: 'DELETE',
+			beforeSend: function(xhr){
+				xhr.setRequestHeader('X-CSRFToken',csrftoken);
+			}
+		}).done(function(){
+			alert('removed to cart');
+			location.href="http://localhost:8000/product/"
+		}).fail(function(){
+			alert('Error in removing to cart')
+		})		
+	}
+	function updateItemCart(){
+		var qty = document.getElementById('number').textContent;
+		var id = document.getElementById('idcartitem').value;
+		$.ajax({
+			url : base_url + '/item/update',
+			type: 'PUT',
+			beforeSend: function(xhr){
+				xhr.setRequestHeader('content-type','application/json');
+				xhr.setRequestHeader('X-CSRFToken',csrftoken);
+			},
+			data: JSON.stringify({
+				"cart_item_id" : id,
+				"qty" : qty
+			})			
+		}).done(function(){
+			alert('Cart has been updated');
+			location.href="http://localhost:8000/product/"
+		}).fail(function(){
+			alert('Error in adding to cart')
+		})
+	}
+</script>
+{% endblock content %}

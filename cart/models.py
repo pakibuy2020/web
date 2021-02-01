@@ -65,7 +65,7 @@ class Payment(models.Model):
 
 class Shipping(models.Model):
     address = models.CharField(max_length=50)
-    contact = models.CharField(max_length=11)
+    contact = models.CharField(max_length=15)
     cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
 
 

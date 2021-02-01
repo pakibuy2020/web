@@ -139,8 +139,9 @@
 			},
 			data: JSON.stringify(data)
 		}).done(function(){
-			alert('Added to cart');
-			location.href="http://localhost:8000/product/"
+			const host = $(location).attr('host'); 
+			//const base_url = `https://${host}/api/cart`;
+			location.href=`http://${host}/product/`
 		}).fail(function(){
 			alert('Error in adding to cart')
 		})

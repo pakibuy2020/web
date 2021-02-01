@@ -72,7 +72,8 @@
         {% csrf_token %}
     </div>
 <script>
-    const base_url = 'http://localhost:8000/api/cart';
+    const host = $(location).attr('host'); 
+    const base_url = `https://${host}/api/cart`;
     const email = document.getElementById('cust_email').value;
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 $(document).ready(function(){

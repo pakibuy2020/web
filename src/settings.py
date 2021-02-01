@@ -40,7 +40,8 @@ SECRET_KEY = 'ozxua_vq&v%f5ve)v2=7_-&lj1w@qi4izt$rcgnu!h%34e=5@5'
 DEBUG = True
 
 # change this per ngrok host
-ALLOWED_HOSTS = ['pakibuy.herokuapp.com', 'localhost']
+ALLOWED_HOSTS=['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'social_django',
     'django_tables2',
+    'corsheaders',
     # 'django_extensions',
     # 'tinymce',
     # 'dynamic_raw_id',
@@ -77,6 +79,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'corsheaders.middleware.CorsMiddleware', # disable cors for mobile
     'whitenoise.middleware.WhiteNoiseMiddleware', # for heroku to display static files
     'social_django.middleware.SocialAuthExceptionMiddleware'  # for social login
 ]

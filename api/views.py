@@ -214,15 +214,13 @@ def payment_gcash(request):
     address = request.data.get("address")
     contact = request.data.get("contact")
 
-    print('printing net')
-    print(net)
-
     url = "https://api.paymongo.com/v1/sources"
 
     amount_int = amount.replace('.', '').replace(',','')
     net_int =  net.replace('.', '').replace(',','')
 
-    print(str(net_int))
+    print(address)
+    print(contact)
     
     headers = {
         "Content-Type": "application/json",

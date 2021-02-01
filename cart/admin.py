@@ -179,7 +179,7 @@ class CartAdmin(admin.ModelAdmin):
 
 class PaymentAdmin(admin.ModelAdmin):
     search_fields = ('payment_type','payment_status','paymongo_id','date_created')
-    list_display = ('id','cart','paymongo_id','net','payment_type','payment_status','date_created','free_shipping')
+    list_display = ('id','cart','paymongo_id','net','payment_type','payment_status','date_created')
 
     class Meta:
         model = Payment
@@ -195,7 +195,7 @@ class PaymentAdmin(admin.ModelAdmin):
         return False
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ["paymongo_id", "cart","net",'payment_amount','payment_type','payment_status','free_shipping']
+            return ["paymongo_id", "cart","net",'payment_amount','payment_type','payment_status']
         else:
             return [] 
     def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):

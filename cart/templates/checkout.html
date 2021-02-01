@@ -134,7 +134,6 @@ $(document).ready(function(){
         const address = document.getElementById('address_form').value;
         const contact = document.getElementById('contact_form').value;
 
-        console.log('Cod payment')
         $.ajax({
                 url : base_url + '/payment/cod/',
                 type: 'POST',

@@ -1,3 +1,4 @@
+	{% load static %}
 	<!-- header -->
 	<div class="agileits_header">
 		<div class="container">
@@ -8,6 +9,7 @@
 				<ul>
 					<!-- my cart -->
 					<li>
+						<a href="{% static 'app/app.apk' %}" download>Download App</a>
 						<a href="" class="fa fa-history" id="history" data-toggle="modal" data-target="#myModal1" style="display:none"></a>
 						<a href="{% url 'carts' %}" class="fa fa-shopping-bag"  data-toggle="modal"><sup class="badge"></sup></a>
 					</li>

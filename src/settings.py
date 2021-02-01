@@ -131,6 +131,11 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'src.wsgi.application'
 
+WHITENOISE_MIMETYPES = {
+    '.xsl': 'application/xml',
+    '.js' : 'text/javascript'
+}
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 

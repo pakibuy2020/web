@@ -233,8 +233,8 @@ def payment_gcash(request):
             "attributes": {
                 "amount": int(net_int),
                 "redirect": {
-                    "success": "http://localhost:8000",
-                    "failed": "http://localhost:8000/cart/failed/" + cartid,
+                    "success": "https://pakibuy.herokuapp.com/",
+                    "failed": "https://pakibuy.herokuapp.com/cart/failed/" + cartid,
                 },
                 "type": "gcash",
                 "currency": "PHP",

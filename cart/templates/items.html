@@ -82,6 +82,8 @@
 {% csrf_token %}
 </div>
 <script>
+	const host = $(location).attr('host'); 
+	const base_url = `https://${host}/api/cart`;
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'PHP',
@@ -89,7 +91,6 @@
     })
 	const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 	const email = document.getElementById('cust_email').value;
-    const base_url = 'http://localhost:8000/api/cart';
 
     $(document).ready(function(){
         var nUrl = base_url + '/' + email
@@ -149,7 +150,7 @@
             })
     })
     function viewItem(productItem){
-        location.href=`http://localhost:8000/product/${productItem}`;
+        location.href=`${base_url}/product/${productItem}`;
     }
     function removeItem(itemId){
 		$.ajax({

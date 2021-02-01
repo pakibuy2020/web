@@ -77,7 +77,8 @@
 	const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 	const email = document.getElementById('cust_email').value;
 	const sku = document.getElementById('hsku').value;
-	const base_url = 'http://localhost:8000/api/cart';
+	const host = $(location).attr('host'); 
+	const base_url = `https://${host}/api/cart`;
 	
 	$( document ).ready(function() {
 		$.ajax({
@@ -139,7 +140,7 @@
 			data: JSON.stringify(data)
 		}).done(function(){
 			alert('Added to cart');
-			location.href="http://localhost:8000/product/"
+			location.href=base_url + '/product'
 		}).fail(function(){
 			alert('Error in adding to cart')
 		})
@@ -154,7 +155,7 @@
 			}
 		}).done(function(){
 			alert('removed to cart');
-			location.href="http://localhost:8000/product/"
+			location.href=base_url + '/product'
 		}).fail(function(){
 			alert('Error in removing to cart')
 		})		
@@ -175,7 +176,7 @@
 			})			
 		}).done(function(){
 			alert('Cart has been updated');
-			location.href="http://localhost:8000/product/"
+			location.href=base_url + '/product'
 		}).fail(function(){
 			alert('Error in adding to cart')
 		})

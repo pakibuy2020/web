@@ -75,6 +75,6 @@ def start():
     scheduler = BackgroundScheduler()
 
     # check in progress payments
-    scheduler.add_job(process_inprogress_payments, 'interval', seconds=10)
+    scheduler.add_job(process_inprogress_payments, 'interval', seconds=60)
 
     scheduler.start()

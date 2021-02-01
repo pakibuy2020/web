@@ -195,7 +195,7 @@ def payment_cod(request):
         payment = Payment(cart=cart,net=net,payment_amount=amount,payment_type=2,paymongo_id=None,free_shipping=free)
         payment.save()
 
-        shipping = Shipping(address=address,contact=int(contact),cart=cart)
+        shipping = Shipping(address=address,contact=str(contact),cart=cart)
         shipping.save()
 
         Cart.objects.filter(id=cartid).update(status=Cart.STATUS.VERIFICATION)
@@ -257,7 +257,7 @@ def payment_gcash(request):
 
             Cart.objects.filter(id=cartid).update(status=2)
 
-            shipping = Shipping(address=address,contact=int(contact),cart=cart)
+            shipping = Shipping(address=address,contact=str(contact),cart=cart)
             shipping.save()
 
             checkout_url = json_data['data']['attributes']['redirect']['checkout_url']

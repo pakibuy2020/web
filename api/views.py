@@ -99,7 +99,7 @@ def cart_items_by_id(request, customer_email,cart_id,size,page_number):
 @api_view(["GET",])
 def carts(request,customer_email,size,page_number): 
     try:
-        cart_list = Cart.objects.filter(customer_email=customer_email)
+        cart_list = Cart.objects.filter(customer_email=customer_email).order_by('-date_created')
         paginator = Paginator(cart_list, size)
         page_obj = paginator.get_page(page_number)
         serializer = CartSerializer(page_obj,many=True)
@@ -179,7 +179,31 @@ def product_item_cart(request, customer_email, product_sku):
 @transaction.atomic
 @api_view(["POST",])
 def payment_cod(request):
-    pass
+    cartid = request.data.get("cart_id")
+    amount = request.data.get("amount")
+    net = request.data.get("net")
+
+    address = request.data.get("address")
+    contact = request.data.get("contact")
+
+    net_int =  net.replace('.', '').replace(',','')
+
+    print(str(int(net_int)))
+
+    free = (float(net_int) > 1000)
+
+    try:
+        cart = Cart.objects.get(id=cartid)
+        payment = Payment(cart=cart,net=net,payment_amount=amount,payment_type=2,paymongo_id=None,free_shipping=free)
+        payment.save()
+
+        shipping = Shipping(address=address,contact=contact,cart=cart)
+        shipping.save()
+
+        Cart.objects.filter(id=cartid).update(status=Cart.STATUS.VERIFICATION)
+        return Response(status=201)
+    except Cart.DoesNotExist:
+        return Response(status=500)
 
 # process payment
 @transaction.atomic
@@ -188,6 +212,9 @@ def payment_gcash(request):
     cartid = request.data.get("cart_id")
     amount = request.data.get("amount")
     net = request.data.get("net")
+
+    print(amount)
+    print(net)
 
     url = "https://api.paymongo.com/v1/sources"
 

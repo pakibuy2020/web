@@ -29,8 +29,8 @@
         {{ ass.extra_data.name }}
        </p>&nbsp;
        <p><span style="color:#3399ff;font-weight:bold;">Email :</span>{{ ass.extra_data.email }}</p>&nbsp;
-       <p><span style="color:#3399ff;font-weight:bold;">Address:</span><input type="text" /></p>&nbsp;
-       <p><span style="color:#3399ff;font-weight:bold;">Contact No:</span><input type="text" /></p>&nbsp;
+       <p><span style="color:#3399ff;font-weight:bold;">Address:</span><input type="text" id="address_form"/></p>&nbsp;
+       <p><span style="color:#3399ff;font-weight:bold;">Contact No:</span><input type="text" id="contact_form"/></p>&nbsp;
        {% endfor %}
        <button type="button" class="btn btn-danger" onclick="cod()">Place order</button>
   </div>
@@ -118,13 +118,45 @@ $(document).ready(function(){
         })
 })
     function cod(){
+        const cartid = document.getElementById('cartid').value;
+        const amount = document.getElementById('amount').value;
+        const net = document.getElementById('net').value;
+
+        const address = document.getElementById('address_form').value;
+        const contact = document.getElementById('contact_form').value;
+
         console.log('Cod payment')
+        $.ajax({
+                url : base_url + '/payment/cod/',
+                type: 'POST',
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader('content-type','application/json');
+                    xhr.setRequestHeader('X-CSRFToken',csrftoken);
+                },
+                data: JSON.stringify({
+                    'cart_id':cartid,
+                    'amount': (Math.round(amount * 100) / 100).toFixed(2),
+                    'net':net,
+                    'address' : address,
+                    'contact' : contact
+                }),
+                success: function(data){
+                   alert('Cart has been processed. One of our representative will contact you for verification.');
+                }            
+            }).done(function(){
+                window.location.href = "/";
+            }).fail(function(){
+                alert('Cannot process payment')
+            })
     }
     function gcash(){
         const cartid = document.getElementById('cartid').value;
         const amount = document.getElementById('amount').value;
         const net = document.getElementById('net').value;
-
+        if(amount < 100){
+            alert('Cannot process gcash if value is below Php. 100.00')
+            return;
+        }
         $.ajax({
             url : base_url + '/payment/gcash/',
             type: 'POST',

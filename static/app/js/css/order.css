@@ -1,0 +1,71 @@
+#orderdet{
+	padding: 50px 0px 0px 0px;
+}
+/* Style the tab */
+.tab {
+	float: left;
+	width: 20%;
+	height: 400px;
+	margin-left: 10px;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+	display: block;
+	background-color: inherit;
+	color: black;
+	padding: 13px 16px;
+	width: 100%;
+	border: none;
+	outline: none;
+	text-align: left;
+	cursor: pointer;
+	transition: 0.3s;
+	font-size: 17px;
+}
+/* Create an active/current "tab button" class */
+.tab button.active {
+	background-color: #3399ff;
+	border-bottom-left-radius: 50px;
+	border-top-left-radius: 50px;
+	color:#fff;
+	font-weight: 700;
+}
+
+/* Style the tab content */
+.tabcontent {
+	float: left;
+	padding: 0px 12px;
+	width: 76%;
+	border-left: none;
+	height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+/*--Pending Order--*/
+.itenerary{
+	margin-bottom: 30px;
+}
+#PenOr{
+	color:#000;
+}
+#PenOr button{
+	background-color:#ff0000;
+	color:#fff;
+	padding: 5px 10px;
+	font-size: 15px;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}
+#PenOr button{
+	background-color: green;
+}
+#PenOr button::selection{
+	border-color: none;
+}
+#details{
+	border:10px solid #000;
+	background-color: #00ff00;
+}
+/*-//Pending Order--*/

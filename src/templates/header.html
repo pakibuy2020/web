@@ -21,7 +21,7 @@
 								</div>
 								<div id="waiting_confirmation" class="modal-body">
 									<h3>Transaction History</h3>
-									<table id="thistory" style="width:100%;text-align:left"><thead><tr><th>Transaction #</th><th>Status</th><th>&nbsp</th></tr></thead><tbody></tbody></table>
+									<table id="thistory" style="width:100%;text-align:left"><thead><tr><th>Transaction #</th><th>Creation Date</th><th>Status</th><th>&nbsp</th></tr></thead><tbody></tbody></table>
 								</div>
 								{% comment %} <div id="footer" style="color:white">
 									<button type="button" class="btn btn-success btn-md"><a href="{% url 'products' %}" style="color:white">Start Shopping</a></button>
@@ -86,12 +86,16 @@ $(document).ready(function(){
 				$.each(data,function(i,item){
 					var status;
 					var receipt_button = '';
+					var view_button = '';
+
 					switch(data[i].status){
 						case 1:
 							status= 'SHOPPING'
+							view_button = '<a href="/cart/view/' + data[i].id + '" style="color:black" class="button">View</a>'
 							break;
 						case 2:
 							status= 'PAYMENT'
+							receipt_button = '<a href="/cart/print/' + data[i].id + '" style="color:black" class="button">Reciept</a>'
 							break;
 						case 3:
 							status= 'SHIPPING'
@@ -102,12 +106,15 @@ $(document).ready(function(){
 							receipt_button = '<a href="/cart/print/' + data[i].id + '" style="color:black" class="button">Reciept</a>'
 							break;
 						case 5:
-							status= 'REJECTED'
+							status= 'CANCELLED'
+							view_button = '<a href="/cart/view/' + data[i].id + '" style="color:black" class="button">View</a>'
 							break;
+						case 6:
+							status ='VERIFICATION'
+							view_button = '<a href="/cart/view/' + data[i].id + '" style="color:black" class="button">View</a>'
 					}
-					$('#thistory tbody').append('<tr><td>Order : ' + data[i].id + '</td> <td>' + status + '</td>' + 
-					'<td><a href="/cart/view/' + data[i].id + '" style="color:black" class="button">View</a></td>' + 
-					'<td>' + receipt_button + '</td>' + 
+					$('#thistory tbody').append('<tr><td>Order : ' + data[i].id + '</td> <td>' + data[i].date_created + '</td> <td><b>' + status + '</b></td>' + 
+					'<td>' + view_button + receipt_button + '</td>' + 
 					'</tr>')
 				});
 			}

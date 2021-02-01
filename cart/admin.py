@@ -1,10 +1,19 @@
 from django.contrib import admin
 from .models import Cart,CartItem,Payment
+
 # Register your models here.
+from django.utils.html import format_html
+from django.conf.urls import url
+from django.urls import reverse
+from django.shortcuts import redirect
+from django.contrib import messages
+from django.template.response import TemplateResponse
+
+from django.db import transaction
 
 class CartAdmin(admin.ModelAdmin):
     search_fields = ('customer_email','status')
-    list_display = ('id','status','net_amt','date_created')
+    list_display = ('id','status','net_amt','date_created','action')
 
     fieldsets = (
         ('Cart', {
@@ -35,13 +44,102 @@ class CartAdmin(admin.ModelAdmin):
             return ["customer_email", "status"]
         else:
             return [] 
+
     def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
         context.update({
             'show_save': False,
             'show_save_and_continue': False,
             'show_delete': False
         })
-        return super().render_change_form(request, context, add, change, form_url, obj)                       
+        return super().render_change_form(request, context, add, change, form_url, obj)
+    
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            url(
+                r'^(?P<cart_id>.+)/recieved/$',
+                self.admin_site.admin_view(self.process_recieved),
+                name='recieved'
+            ),
+            url(
+                r'^(?P<cart_id>.+)/cancel/$',
+                self.admin_site.admin_view(self.process_cancel),
+                name='cancel'                
+            ),
+            url(
+                r'^(?P<cart_id>.+)/verified/$',
+                self.admin_site.admin_view(self.process_verification),
+                name='verified'                
+            )
+        ]
+        return custom_urls + urls
+
+    def action(self, obj):
+        status = obj.status
+        if status == Cart.STATUS.SHIPPING:
+            return format_html(
+                '<a class="button" href="{}">Mark as Recieved</a>&nbsp;',
+                reverse('admin:recieved', args=[obj.pk]),
+            )
+        elif status == Cart.STATUS.VERIFICATION:
+             return format_html(
+               '<a class="button" href="{}">Verified</a>&nbsp;'
+               '<a class="button" href="{}">Reject</a>',
+               reverse('admin:verified', args=[obj.pk]),
+               reverse('admin:cancel', args=[obj.pk])
+            )           
+        elif status == Cart.STATUS.SHOPPING:
+            return format_html(
+               '<a class="button" href="{}">Cancel Cart</a>',
+               reverse('admin:cancel', args=[obj.pk]))
+
+        else:
+            return None
+    action.short_description = "Order Actions"
+    action.allow_tags = True
+
+    # once the status is shipping. Cart can now mark as recieved
+    @transaction.atomic
+    def process_recieved(self, request,cart_id, *args, **kwargs):
+        try:
+            Cart.objects.filter(id=cart_id).update(status=Cart.STATUS.RECIEVED)
+            cart = Cart.objects.get(id=cart_id)
+
+            # if COD then update payment
+            payment = Payment.objects.get(cart=cart)
+            if payment.payment_type == Payment.PAYMENT_TYPE.COD:
+                Payment.objects.filter(cart=cart).update(payment_status=Payment.PAYMENT_STATUS.PAID)
+
+            messages.success(request, 'Cart successfully marked as Recieved')
+        except Cart.DoesNotExist:
+            messages.add_message(request, messages.SUCCESS, 'Cart cannot mark as recieved.')
+        
+        return redirect('/admin/cart/cart/')
+
+    # once the status is verification. User can mark it as verified
+    # only for COD payment
+    @transaction.atomic
+    def process_verification(self, request,cart_id, *args, **kwargs):
+        try:
+            Cart.objects.filter(id=cart_id).update(status=Cart.STATUS.SHIPPING)
+            messages.success(request, 'Cart successfully verified')
+        except Cart.DoesNotExist:
+            messages.add_message(request, messages.SUCCESS, 'Cart cannot mark as verified.')
+        
+        return redirect('/admin/cart/cart/')
+
+    # if the status is shopping. Can can mark as cancel by admin
+    @transaction.atomic
+    def process_cancel(self, request,cart_id, *args, **kwargs):
+        try:
+            Cart.objects.filter(id=cart_id).update(status=Cart.STATUS.CANCELLED)
+            cart = Cart.objects.get(id=cart_id)
+            Payment.objects.filter(cart=cart).update(payment_status=Payment.PAYMENT_STATUS.CANCELLED)
+            messages.success(request, 'Cart successfully marked as Cancel')
+        except Cart.DoesNotExist:
+            messages.add_message(request, messages.SUCCESS, 'Cart cannot mark as cancel.')
+        
+        return redirect('/admin/cart/cart/')
 
 class PaymentAdmin(admin.ModelAdmin):
     search_fields = ('payment_type','payment_status','paymongo_id','date_created')

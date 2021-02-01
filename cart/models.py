@@ -8,6 +8,7 @@ class Cart(models.Model):
         SHIPPING = 3,
         RECIEVED = 4,
         CANCELLED = 5,
+        VERIFICATION = 6
 
     customer_email = models.CharField(max_length=50)
     description = models.TextField(max_length=30)
@@ -25,6 +26,7 @@ class CartItem(models.Model):
     # products = models.ForeignKey(Product, on_delete=models.CASCADE)
     product = models.ForeignKey('product.Product', on_delete=models.CASCADE,unique=False)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    
     def __str__(self):
         return str(self.id)    
 
@@ -38,7 +40,7 @@ class Payment(models.Model):
         EXPIRED = 3,
         CANCELLED = 4    
 
-    paymongo_id = models.CharField(max_length=50)
+    paymongo_id = models.CharField(max_length=50,null=True,blank=True)
     cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
     net = models.DecimalField(max_digits=7, decimal_places=2)
     payment_amount = models.DecimalField(max_digits=7, decimal_places=2)
@@ -47,3 +49,14 @@ class Payment(models.Model):
     payment_status = models.IntegerField(choices=PAYMENT_STATUS.choices,default=PAYMENT_STATUS.INPROGRESS)
     # address = models.CharField(blank=True,null=True,max_length=80)
     date_created = models.DateTimeField(auto_now_add=True)
+
+class Shipping(models.Model):
+    address = models.CharField(max_length=50)
+    contact = models.IntegerField()
+    cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
+
+
+# class ReturnCart(models.Model):
+#     cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
+#     date_created = models.DateTimeField(auto_now_add=True)
+    

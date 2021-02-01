@@ -51,7 +51,7 @@ SECRET_KEY = 'ozxua_vq&v%f5ve)v2=7_-&lj1w@qi4izt$rcgnu!h%34e=5@5'
 DEBUG = True
 
 # change this per ngrok host
-ALLOWED_HOSTS = ['069007c0ce13.ngrok.io', 'localhost']
+ALLOWED_HOSTS = ['632357d234b9.ngrok.io', 'localhost']
 
 # Application definition
 
@@ -60,11 +60,14 @@ INSTALLED_APPS = [
     'home',
     'product',
     'cart',
+    # 'walkin'
 
     'api',
 
     'rest_framework',
     'social_django',
+    'django_tables2',
+    'django_extensions',
     # 'tinymce',
     # 'dynamic_raw_id',
 
@@ -183,3 +186,8 @@ MEDIA_URL = '/media/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True
+}

@@ -32,7 +32,27 @@ def failed_cart(request,cart_id):
 def print_reciept(request,cart_id):
     cart = Cart.objects.get(id=cart_id)
     cart_items = CartItem.objects.filter(cart=cart)
-    context = {'cart':cart,'cartItems': cart_items}
+
+    total = 0.00
+    net = 0.00
+    shipping = 100.00
+
+    for item in cart_items:
+        price = item.product.price
+        qty = item.qty
+        total = total + float(price * qty)
+
+    if total >= 1000:
+        shipping = 'Free Shipping'
+        net = 'Php ' + str(total)
+    else:
+        shipping = 'Php ' + str(100.00)
+        net = 'Php ' + str(total + float(100.00))
+
+
+    context = {'cart':cart,'cartItems': cart_items,'total' : 'Php ' + str(total),'net': str(net),'shipping': shipping }
+    
+    
     pdf = render_to_pdf('reciept.html',context)
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')

@@ -150,7 +150,8 @@
             })
     })
     function viewItem(productItem){
-        location.href=`${base_url}/product/${productItem}`;
+      var host_product = `https://${host}`
+      location.href=`${host_product}/product/${productItem}`;
     }
     function removeItem(itemId){
 		$.ajax({

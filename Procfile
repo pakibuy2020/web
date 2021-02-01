@@ -1,1 +1,1 @@
-web: gunicorn pakibuy.wsgi
+web: gunicorn pakibuy:app

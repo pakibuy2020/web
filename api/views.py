@@ -248,7 +248,7 @@ def payment_gcash(request):
             json_data = response.json()
             paymongo_id = json_data['data']['id']
             
-            free = (int(net_int) > 1000)
+            free = (int(net_int) > int(1000.00))
 
             payment = Payment(cart=cart,net=net,payment_amount=amount,payment_type=1,paymongo_id=paymongo_id,free_shipping=free)
             payment.save()

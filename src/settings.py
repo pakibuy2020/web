@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'social_django',
     'django_tables2',
-    'django_extensions',
+    # 'django_extensions',
     # 'tinymce',
     # 'dynamic_raw_id',
 

@@ -33,7 +33,6 @@ class Cart(models.Model):
     def __str__(self):
         return str(self.id)
 
-
 class CartItem(models.Model):
     qty = models.IntegerField()
     last_modified = models.DateTimeField(auto_now_add=True)

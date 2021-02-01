@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 # from tinymce.models import HTMLField
+from django.core.validators import MinValueValidator
 
 from cart.models import CartItem,Cart
 
@@ -60,7 +61,7 @@ class Product(models.Model):
     sku = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=30)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2,validators=[MinValueValidator(Decimal('0.01'))])
     date_created = models.DateTimeField(auto_now_add=True)
     cover_photo = models.ImageField(upload_to="gallery",blank=True,null=True)
     
@@ -96,7 +97,7 @@ class Product(models.Model):
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier,on_delete=models.CASCADE)
-    stock = models.IntegerField(null=False)
+    stock = models.PositiveIntegerField(null=False,validators=[MinValueValidator(0)])
     last_updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:

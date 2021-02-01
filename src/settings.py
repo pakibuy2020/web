@@ -40,7 +40,7 @@ SECRET_KEY = 'ozxua_vq&v%f5ve)v2=7_-&lj1w@qi4izt$rcgnu!h%34e=5@5'
 DEBUG = True
 
 # change this per ngrok host
-ALLOWED_HOSTS = ['632357d234b9.ngrok.io', 'localhost']
+ALLOWED_HOSTS = ['pakibuy.herokuapp.com', 'localhost']
 
 # Application definition
 

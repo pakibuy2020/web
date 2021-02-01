@@ -3,7 +3,9 @@
 
 {% block content %}
 {% csrf_token %}
-	<div class="breadcrumbs">
+
+   
+   	<div class="breadcrumbs">
 		<div class="container">
 			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
 				<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
@@ -13,42 +15,24 @@
 			</ol>
 		</div>
 	</div>
-    <div class="products">
-		<div class="container">
-			<div class="col-md-6">
-					<div class="container-fluid">
- 					 <ul class="nav nav-tabs" id="myTab">
-  <li class="active"><a data-toggle="tab" href="#cod">COD</a></li>
-  <li><a data-toggle="tab" href="#pakiwallet">GCash</a></li>
- </ul>
- <div class="tab-content" id="myTabContent">
-  <div id="cod" class="tab-pane fade in active">
-       <h4>Delivery Information</h4>&nbsp;
-       <p><span style="color:#3399ff;font-weight:bold;">Name:</span>
-       {% for ass in backends.associated %}
-        {{ ass.extra_data.name }}
-       </p>&nbsp;
-       <p><span style="color:#3399ff;font-weight:bold;">Email :</span>{{ ass.extra_data.email }}</p>&nbsp;
-       <p><span style="color:#3399ff;font-weight:bold;">Address:</span><input type="text" id="address_form"/></p>&nbsp;
-       <p><span style="color:#3399ff;font-weight:bold;">Contact No:</span><input type="text" id="contact_form"/></p>&nbsp;
-       {% endfor %}
-       <button type="button" class="btn btn-danger" onclick="cod()">Place order</button>
-  </div>
 
-  <div id="pakiwallet" class="tab-pane fade">
-   <h3>Section B</h3>
-   <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
-    <button type="button" class="btn btn-danger" onclick="gcash()">Place order</button>
-  </div>
- </div>
- <hr>
- <!-- end Payment-->
-				</div>																	
-			</div>
-			<div class="col-md-6" id="payment" >
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<h2>Order Details</h2>&nbsp;&nbsp;&nbsp;
-				<table>
+    <div class="container">
+        <div class="col-md-6">
+            <h4>Delivery Information</h4>&nbsp;
+            <p><span style="color:#3399ff;font-weight:bold;">Name:</span>
+            {% for ass in backends.associated %}
+                {{ ass.extra_data.name }}
+            </p>&nbsp;
+            <p><span style="color:#3399ff;font-weight:bold;">Email :</span>{{ ass.extra_data.email }}</p>&nbsp;
+            <p><span style="color:#3399ff;font-weight:bold;">Address:</span><input type="text"  id="address_form"/></input>&nbsp;
+            <p><span style="color:#3399ff;font-weight:bold;">Contact No:</span><input type="text" id="contact_form"/></p>&nbsp;
+            {% endfor %}
+        </div>
+        
+        
+        <div class="col-md-6">
+				<h2>Order Details</h2>
+				<table style="width:100%">
 					<thead>
 						<tr>
 							<th>Price</th>
@@ -62,22 +46,33 @@
 							<td><h4>Total Amount</h4></td>
 							<td id="price">Php. 0.00</td>
 						</tr>
+    
+                        <tr>
+							<td><h4>Payment Method</h4></td>
+							<td>
+                                <select name="payment_method" id="payment_method">
+                                    <option value="cod">Cash on Delivery</option>
+                                    <option value="gcash">Gcash</option>
+                                </select>
+                            </td>
+						</tr>
 					</thead>
 				</table>
-			</div>
-			<div class="clearfix"> </div>
-		</div>
-	</div>
-    <div id="hdata">
+        </div>
+
+        <button type="button" class="btn btn-danger" onclick="placeorder()">Place order</button>
+
+    </div>
+
+   
+   <div id="hdata">
         {% for ass in backends.associated %}
             <input type="hidden" value="{{ ass.extra_data.email }}" id="cust_email"/>
         {% endfor %}
         {% csrf_token %}
     </div>
 <script>
-    const host = $(location).attr('host'); 
-	const base_url = `https://${host}/api/cart`;
-    //const base_url = 'http://localhost:8000/api/cart';
+    const base_url = 'http://localhost:8000/api/cart';
     const email = document.getElementById('cust_email').value;
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 $(document).ready(function(){
@@ -92,8 +87,6 @@ $(document).ready(function(){
         }).done(function(data, statusText, xhr){
             var sub = 0;
             var net = 0;
-
-            console.log('data: ' + JSON.stringify(data));
             //add item row
             
             $.each(data.cartitem,function(i,item){
@@ -101,24 +94,36 @@ $(document).ready(function(){
                 let q = data.cartitem[i].qty;
 
                 sub = sub + (p * q);
-                net = sub;
             })
             $("th#price").html(`${formatter.format(sub)}`);
             $("td#price").html(`${formatter.format(sub)}`);
 
             if(sub >= 1000){
                 $("td#charges").html('<span style="color:#3399ff">Free</span>'); 
+                net = sub;
             }else{
-                $("td#charges").html('<span style="color:red">Standart Rates apply</span>'); 
+                $("td#charges").html('<span style="color:red">PHP 100.00</span>'); 
+                net = sub + 100.00
             }
 
-               
+            console.log(net)
+            console.log(sub)
 
             $('#hdata').append(`<input type="hidden" value="${sub}" id="amount"/>`);
-            $('#hdata').append(`<input type="hidden" value="${sub}" id="net"/>`); 
+            $('#hdata').append(`<input type="hidden" value="${net}" id="net"/>`); 
             $('#hdata').append(`<input type="hidden" value="${data.id}" id="cartid"/>`);
         })
+
+        
 })
+    function placeorder(){
+        var payment = $('#payment_method').val();
+        if(payment ==='gcash'){
+            gcash()
+        }else{
+            cod()
+        }
+    }
     function cod(){
         const cartid = document.getElementById('cartid').value;
         const amount = document.getElementById('amount').value;
@@ -155,6 +160,9 @@ $(document).ready(function(){
         const cartid = document.getElementById('cartid').value;
         const amount = document.getElementById('amount').value;
         const net = document.getElementById('net').value;
+        const address = document.getElementById('address_form').value;
+        const contact = document.getElementById('contact_form').value;
+
         if(amount < 100){
             alert('Cannot process gcash if value is below Php. 100.00')
             return;
@@ -169,7 +177,9 @@ $(document).ready(function(){
             data: JSON.stringify({
                 'cart_id':cartid,
                 'amount': (Math.round(amount * 100) / 100).toFixed(2),
-                'net':net
+                'net':(Math.round(net * 100) / 100).toFixed(2),
+                'address' : address,
+                'contact' : contact
             }),
             success: function(data){
                 //console.log(data);

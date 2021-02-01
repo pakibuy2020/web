@@ -16,6 +16,20 @@ class Cart(models.Model):
     status = models.IntegerField(choices=STATUS.choices,default=STATUS.SHOPPING)
     date_created = models.DateTimeField(auto_now_add=True)
 
+    def get_status(self):
+        if self.status == Cart.STATUS.SHIPPING:
+            return 'Shipping'
+        elif self.status == Cart.STATUS.PAYMENT:
+            return 'Payment'
+        elif self.status == Cart.STATUS.SHOPPING:
+            return 'Shopping'
+        elif self.status == Cart.STATUS.RECIEVED:
+            return 'Recieved'
+        elif self.status == Cart.STATUS.CANCELLED:
+            return 'Cancelled'
+        else:
+            return 'Verification'
+
     def __str__(self):
         return str(self.id)
 

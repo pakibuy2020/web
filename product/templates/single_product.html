@@ -74,11 +74,10 @@
 {% csrf_token %}
 
 <script>
-	const host = $(location).attr('host'); 
-	const base_url = `https://${host}/api/cart`;
 	const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 	const email = document.getElementById('cust_email').value;
 	const sku = document.getElementById('hsku').value;
+	const base_url = 'http://localhost:8000/api/cart';
 	
 	$( document ).ready(function() {
 		$.ajax({
@@ -139,9 +138,8 @@
 			},
 			data: JSON.stringify(data)
 		}).done(function(){
-			const host = $(location).attr('host'); 
-			//const base_url = `https://${host}/api/cart`;
-			location.href=`http://${host}/product/`
+			alert('Added to cart');
+			location.href="http://localhost:8000/product/"
 		}).fail(function(){
 			alert('Error in adding to cart')
 		})

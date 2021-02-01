@@ -188,9 +188,7 @@ def payment_cod(request):
 
     net_int =  net.replace('.', '').replace(',','')
 
-    print(str(int(net_int)))
-
-    free = (float(net_int) > 1000)
+    free = (int(net_int) > 1000)
 
     try:
         cart = Cart.objects.get(id=cartid)
@@ -213,7 +211,10 @@ def payment_gcash(request):
     amount = request.data.get("amount")
     net = request.data.get("net")
 
-    print(amount)
+    address = request.data.get("address")
+    contact = request.data.get("contact")
+
+    print('printing net')
     print(net)
 
     url = "https://api.paymongo.com/v1/sources"
@@ -221,6 +222,8 @@ def payment_gcash(request):
     amount_int = amount.replace('.', '').replace(',','')
     net_int =  net.replace('.', '').replace(',','')
 
+    print(str(net_int))
+    
     headers = {
         "Content-Type": "application/json",
         "Authorization": "Basic cGtfdGVzdF9ISGhDdDZGRnB6aTNaSFh6cHhwV2RjSEs6",
@@ -228,7 +231,7 @@ def payment_gcash(request):
     payload = {
         "data": {
             "attributes": {
-                "amount": int(amount_int),
+                "amount": int(net_int),
                 "redirect": {
                     "success": "http://localhost:8000",
                     "failed": "http://localhost:8000/cart/failed/" + cartid,
@@ -253,6 +256,9 @@ def payment_gcash(request):
             payment.save()
 
             Cart.objects.filter(id=cartid).update(status=2)
+
+            shipping = Shipping(address=address,contact=contact,cart=cart)
+            shipping.save()
 
             checkout_url = json_data['data']['attributes']['redirect']['checkout_url']
             return Response({'checkout_url': checkout_url})

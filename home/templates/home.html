@@ -164,8 +164,7 @@
 <script src="{% static 'app/js/skdslider.min.js' %}"></script>
 <link href="{% static 'app/css/skdslider.css' %}" rel="stylesheet">
 <script type="text/javascript">
-	const host = $(location).attr('host'); 
-	const base_url = `https://${host}`;
+	const base_url = 'http://localhost:8000'
 
 	function redirect(url){
 		window.open('/product/'+url);

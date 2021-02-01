@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Cart,CartItem,Payment
+from .models import Cart,CartItem,Payment,Shipping
+from django.contrib.auth.models import User
 
 # Register your models here.
 from django.utils.html import format_html
@@ -70,6 +71,11 @@ class CartAdmin(admin.ModelAdmin):
                 r'^(?P<cart_id>.+)/verified/$',
                 self.admin_site.admin_view(self.process_verification),
                 name='verified'                
+            ),
+            url(
+                r'^(?P<cart_id>.+)/view/$',
+                self.admin_site.admin_view(self.view_cart),
+                name='view'                
             )
         ]
         return custom_urls + urls
@@ -78,25 +84,55 @@ class CartAdmin(admin.ModelAdmin):
         status = obj.status
         if status == Cart.STATUS.SHIPPING:
             return format_html(
-                '<a class="button" href="{}">Mark as Recieved</a>&nbsp;',
+                '<a class="button" href="{}">Mark as Recieved</a>&nbsp;'
+                '<a class="button" href="{}">View Details</a>',
                 reverse('admin:recieved', args=[obj.pk]),
+                reverse('admin:view', args=[obj.pk])
             )
         elif status == Cart.STATUS.VERIFICATION:
              return format_html(
                '<a class="button" href="{}">Verified</a>&nbsp;'
-               '<a class="button" href="{}">Reject</a>',
+               '<a class="button" href="{}">Reject</a>&nbsp;'
+               '<a class="button" href="{}">View Details</a>',
                reverse('admin:verified', args=[obj.pk]),
-               reverse('admin:cancel', args=[obj.pk])
+               reverse('admin:cancel', args=[obj.pk]),
+               reverse('admin:view', args=[obj.pk])
             )           
         elif status == Cart.STATUS.SHOPPING:
             return format_html(
-               '<a class="button" href="{}">Cancel Cart</a>',
-               reverse('admin:cancel', args=[obj.pk]))
+               '<a class="button" href="{}">Cancel Cart</a>&nbsp;'
+               '<a class="button" href="{}">View Details</a>',
+               reverse('admin:cancel', args=[obj.pk]),
+               reverse('admin:view', args=[obj.pk]))
 
         else:
-            return None
+           return format_html(
+                '<a class="button" href="{}">View Details</a>',
+                reverse('admin:view', args=[obj.pk])
+            )
     action.short_description = "Order Actions"
     action.allow_tags = True
+
+    def view_cart(self, request,cart_id, *args, **kwargs):
+        context = self.admin_site.each_context(request)
+        context['opts'] = self.model._meta
+
+        cart = Cart.objects.get(id=cart_id)
+        cartItems = CartItem.objects.filter(cart=cart)
+        
+        custname = User.objects.get(email=cart.customer_email)
+
+        context['custname'] = custname
+        context['cart'] = cart
+        context['cartItems'] = cartItems
+
+        try:
+            shipping = Shipping.objects.get(cart=cart)
+            context['shipping'] = shipping
+        except Shipping.DoesNotExist:
+            pass
+        
+        return TemplateResponse(request,'admin/cart/view.html',context)
 
     # once the status is shipping. Cart can now mark as recieved
     @transaction.atomic
@@ -170,10 +206,10 @@ class PaymentAdmin(admin.ModelAdmin):
         })
         return super().render_change_form(request, context, add, change, form_url, obj)  
 
-# class DeliveryAdmin(admin.ModelAdmin):
-#     class Meta:
-#         model = Delivery
+class ShippingAdmin(admin.ModelAdmin):
+    class Meta:
+        model = Shipping
 
 admin.site.register(Cart,CartAdmin)
-# admin.site.register(Delivery,DeliveryAdmin)
+admin.site.register(Shipping,ShippingAdmin)
 admin.site.register(Payment,PaymentAdmin)

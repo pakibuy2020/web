@@ -36,8 +36,8 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [  # add this
     ('link', 'profile_url'),
 ]
 
-SOCIAL_AUTH_FACEBOOK_KEY = '758682888067292'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = 'c5c072c2c16523e2610f3ff7d3fddb7b'
+SOCIAL_AUTH_FACEBOOK_KEY = '644801286233938'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'a196d1f8e29b19a2db13454a7d988345'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'ozxua_vq&v%f5ve)v2=7_-&lj1w@qi4izt$rcgnu!h%34e=5@5'

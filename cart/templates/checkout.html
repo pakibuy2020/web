@@ -113,13 +113,13 @@
         })
 
         //to fillup address and contact
-        // $.ajax({
-        //     url: adderss_url + '/address/' + email,
-        //     type: 'GET'
-        // }).done(function(data, statusText, xhr) {
-        //     $('#address_form').val(data.address)
-        //     $('#contact_form').val(data.contact)
-        // });
+        $.ajax({
+            url: adderss_url + '/address/' + email,
+            type: 'GET'
+        }).done(function(data, statusText, xhr) {
+            $('#address_form').val(data.address)
+            $('#contact_form').val(data.contact)
+        });
 
 
     })

@@ -26,9 +26,20 @@ REST_FRAMEWORK = {
 }
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']  # add this
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_PROFILE_EXTRA_PARAMS = {  # add this
+    'fields': 'id, fullname, email, picture.type(large), link'
+}
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {  # add this
     'fields': 'id, name, email, picture.type(large), link'
 }
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [  # add this
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'picture'),
+    ('link', 'profile_url'),
+]
 SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [  # add this
     ('name', 'name'),
     ('email', 'email'),
@@ -126,6 +137,7 @@ TEMPLATES = [
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.github.GithubOAuth2',
     # 'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
 
     'django.contrib.auth.backends.ModelBackend',

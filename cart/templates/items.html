@@ -85,7 +85,7 @@
         minimumFractionDigits: 2
     })
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const email = (document.getElementById('cust_email').value).replace(/\./g, '');
+    const email = document.getElementById('cust_email').value;
 
     $(document).ready(function() {
         var nUrl = base_url + '/' + email

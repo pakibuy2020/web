@@ -1,96 +1,92 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block content %} {% csrf_token %}
 
-{% block content %}
-{% csrf_token %}
 
-   
-   	<div class="breadcrumbs">
-		<div class="container">
-			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
-				<li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
-                <li class="active">
-                   Checkout
-                </li>
-			</ol>
-		</div>
-	</div>
-
+<div class="breadcrumbs">
     <div class="container">
-        <div class="col-md-6">
-            <h4>Delivery Information</h4>&nbsp;
-            <p><span style="color:#3399ff;font-weight:bold;">Name:</span>
-            {% for ass in backends.associated %}
-                {{ ass.extra_data.name }}
-            </p>&nbsp;
-            <p><span style="color:#3399ff;font-weight:bold;">Email :</span>{{ ass.extra_data.email }}</p>&nbsp;
-            <p><span style="color:#3399ff;font-weight:bold;">Address:</span><input type="text"  id="address_form"/></input>&nbsp;
-            <p><span style="color:#3399ff;font-weight:bold;">Contact No:</span><input type="text" id="contact_form"/></p>&nbsp;
-            {% endfor %}
-        </div>
-        
-        
-        <div class="col-md-6">
-				<h2>Order Details</h2>
-				<table style="width:100%">
-					<thead>
-						<tr>
-							<th>Price</th>
-							<th id="price">Php. 0.00</th>
-						</tr>
-						<tr>
-							<td>Charges</td>
-							<td id="charges"><span style="color:#3399ff">Free</span></td>
-						</tr>
-						<tr>
-							<td><h4>Total Amount</h4></td>
-							<td id="net">Php. 0.00</td>
-						</tr>
-    
-                        <tr>
-							<td><h4>Payment Method</h4></td>
-							<td>
-                                <select name="payment_method" id="payment_method">
+        <ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+            <li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+            <li class="active">
+                Checkout
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-md-6">
+        <h4>Delivery Information</h4>&nbsp;
+        <p><span style="color:#3399ff;font-weight:bold;">Name:</span> {% for ass in backends.associated %} {{ ass.extra_data.name }}
+        </p>&nbsp;
+        <p><span style="color:#3399ff;font-weight:bold;">Email :</span>{{ ass.extra_data.email }}</p>&nbsp;
+        <p><span style="color:#3399ff;font-weight:bold;">Address:</span><input type="text" id="address_form" /></input>&nbsp;
+            <p><span style="color:#3399ff;font-weight:bold;">Contact No:</span><input type="text" id="contact_form" /></p>&nbsp; {% endfor %}
+    </div>
+
+
+    <div class="col-md-6">
+        <h2>Order Details</h2>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>Price</th>
+                    <th id="price">Php. 0.00</th>
+                </tr>
+                <tr>
+                    <td>Charges</td>
+                    <td id="charges"><span style="color:#3399ff">Free</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>Total Amount</h4>
+                    </td>
+                    <td id="net">Php. 0.00</td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <h4>Payment Method</h4>
+                    </td>
+                    <td>
+                        <select name="payment_method" id="payment_method">
                                     <option value="cod">Cash on Delivery</option>
                                     <option value="gcash">Gcash</option>
                                 </select>
-                            </td>
-						</tr>
-					</thead>
-				</table>
-        </div>
-
-        <button type="button" class="btn btn-danger" onclick="placeorder()">Place order</button>
-
+                    </td>
+                </tr>
+            </thead>
+        </table>
     </div>
 
-   
-   <div id="hdata">
-        {% for ass in backends.associated %}
-            <input type="hidden" value="{{ ass.extra_data.email }}" id="cust_email"/>
-        {% endfor %}
-        {% csrf_token %}
-    </div>
+    <button type="button" class="btn btn-danger" onclick="placeorder()">Place order</button>
+
+</div>
+
+
+<div id="hdata">
+    {% for ass in backends.associated %}
+    <input type="hidden" value="{{ ass.extra_data.email }}" id="cust_email" /> {% endfor %} {% csrf_token %}
+</div>
 <script>
-    const host = $(location).attr('host'); 
+    const host = $(location).attr('host');
     const base_url = `https://${host}/api/cart`;
+    const adderss_url = `http://${host}/cart`;
     const email = document.getElementById('cust_email').value;
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-$(document).ready(function(){
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'PHP',
-        minimumFractionDigits: 2
-    })
+    $(document).ready(function() {
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'PHP',
+            minimumFractionDigits: 2
+        })
         $.ajax({
-            url : base_url + '/' + email,
+            url: base_url + '/' + email,
             type: 'GET'
-        }).done(function(data, statusText, xhr){
+        }).done(function(data, statusText, xhr) {
             var sub = 0;
             var net = 0;
             //add item row
-            
-            $.each(data.cartitem,function(i,item){
+
+            $.each(data.cartitem, function(i, item) {
                 let p = data.cartitem[i].product.price;
                 let q = data.cartitem[i].qty;
 
@@ -99,34 +95,45 @@ $(document).ready(function(){
             $("th#price").html(`${formatter.format(sub)}`);
             $("td#price").html(`${formatter.format(sub)}`);
 
-            if(sub >= 1000){
-                $("td#charges").html('<span style="color:#3399ff">Free</span>'); 
+            if (sub >= 1000) {
+                $("td#charges").html('<span style="color:#3399ff">Free</span>');
                 net = sub;
-            }else{
-                $("td#charges").html('<span style="color:red">PHP 100.00</span>'); 
+            } else {
+                $("td#charges").html('<span style="color:red">PHP 100.00</span>');
                 net = sub + 100.00
-                $("td#net").html(`<span style="color:red">${formatter.format(net)}</span>`); 
+                $("td#net").html(`<span style="color:red">${formatter.format(net)}</span>`);
             }
 
             console.log(net)
             console.log(sub)
 
             $('#hdata').append(`<input type="hidden" value="${sub}" id="amount"/>`);
-            $('#hdata').append(`<input type="hidden" value="${net}" id="net"/>`); 
+            $('#hdata').append(`<input type="hidden" value="${net}" id="net"/>`);
             $('#hdata').append(`<input type="hidden" value="${data.id}" id="cartid"/>`);
         })
 
-        
-})
-    function placeorder(){
+        //to fillup address and contact
+        $.ajax({
+            url: adderss_url + '/address/' + email,
+            type: 'GET'
+        }).done(function(data, statusText, xhr) {
+            $('#address_form').val(data.address)
+            $('#contact_form').val(data.contact)
+        });
+
+
+    })
+
+    function placeorder() {
         var payment = $('#payment_method').val();
-        if(payment ==='gcash'){
+        if (payment === 'gcash') {
             gcash()
-        }else{
+        } else {
             cod()
         }
     }
-    function cod(){
+
+    function cod() {
         const cartid = document.getElementById('cartid').value;
         const amount = document.getElementById('amount').value;
         const net = document.getElementById('net').value;
@@ -135,54 +142,55 @@ $(document).ready(function(){
         const contact = document.getElementById('contact_form').value;
 
         $.ajax({
-                url : base_url + '/payment/cod/',
-                type: 'POST',
-                beforeSend: function(xhr){
-                    xhr.setRequestHeader('content-type','application/json');
-                    xhr.setRequestHeader('X-CSRFToken',csrftoken);
-                },
-                data: JSON.stringify({
-                    'cart_id':cartid,
-                    'amount': (Math.round(amount * 100) / 100).toFixed(2),
-                    'net':net,
-                    'address' : address,
-                    'contact' : contact
-                }),
-                success: function(data){
-                   alert('Cart has been processed. One of our representative will contact you for verification.');
-                }            
-            }).done(function(){
-                window.location.href = "/";
-            }).fail(function(){
-                alert('Cannot process payment')
-            })
+            url: base_url + '/payment/cod/',
+            type: 'POST',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('content-type', 'application/json');
+                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+            },
+            data: JSON.stringify({
+                'cart_id': cartid,
+                'amount': (Math.round(amount * 100) / 100).toFixed(2),
+                'net': net,
+                'address': address,
+                'contact': contact
+            }),
+            success: function(data) {
+                alert('Cart has been processed. One of our representative will contact you for verification.');
+            }
+        }).done(function() {
+            window.location.href = "/";
+        }).fail(function() {
+            alert('Cannot process payment')
+        })
     }
-    function gcash(){
+
+    function gcash() {
         const cartid = document.getElementById('cartid').value;
         const amount = document.getElementById('amount').value;
         const net = document.getElementById('net').value;
         const address = document.getElementById('address_form').value;
         const contact = document.getElementById('contact_form').value;
 
-        if(amount < 100){
+        if (amount < 100) {
             alert('Cannot process gcash if value is below Php. 100.00')
             return;
         }
         $.ajax({
-            url : base_url + '/payment/gcash/',
+            url: base_url + '/payment/gcash/',
             type: 'POST',
-			beforeSend: function(xhr){
-				xhr.setRequestHeader('content-type','application/json');
-				xhr.setRequestHeader('X-CSRFToken',csrftoken);
-			},
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('content-type', 'application/json');
+                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+            },
             data: JSON.stringify({
-                'cart_id':cartid,
+                'cart_id': cartid,
                 'amount': (Math.round(amount * 100) / 100).toFixed(2),
-                'net':(Math.round(net * 100) / 100).toFixed(2),
-                'address' : address,
-                'contact' : contact
+                'net': (Math.round(net * 100) / 100).toFixed(2),
+                'address': address,
+                'contact': contact
             }),
-            success: function(data){
+            success: function(data) {
                 //console.log(data);
                 var win = window.open(data.checkout_url, '_blank');
                 if (win) {
@@ -192,10 +200,10 @@ $(document).ready(function(){
                     //Browser has blocked it
                     alert('Please allow popups for this website');
                 }
-            }            
-        }).done(function(){
+            }
+        }).done(function() {
             //alert('payment submitted')
-        }).fail(function(){
+        }).fail(function() {
             alert('Cannot process payment')
         })
     }

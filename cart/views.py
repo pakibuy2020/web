@@ -8,6 +8,13 @@ from rest_framework.decorators import api_view
 
 from .utils import *
 
+from rest_framework import serializers
+
+class ShippingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shipping
+        fields = ('address','contact')
+
 @login_required
 def list_cart(request):
     return render(request, "items.html",{'is_view':'false'})
@@ -27,6 +34,16 @@ def failed_cart(request,cart_id):
     Cart.objects.filter(id=cart_id).update(status=1)
     return render(request, "items.html")
 
+@api_view(["GET"],)
+def cart_last_address(request,person_email):
+    try:
+        cart = Cart.objects.filter(customer_email=person_email,status=Cart.STATUS.RECIEVED).order_by('-date_created')[0];
+        shipping = Shipping.objects.get(cart=cart)
+        serializer = ShippingSerializer(shipping)
+        return Response(serializer.data, status=200)
+    except Cart.DoesNotExist:
+        return Response(status=404)
+        
 # # api to view receipt
 @api_view(["GET"],)
 def print_reciept(request,cart_id):

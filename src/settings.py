@@ -50,6 +50,9 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [  # add this
 SOCIAL_AUTH_FACEBOOK_KEY = '644801286233938'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = 'a196d1f8e29b19a2db13454a7d988345'
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '769637037756-ejr997jfi6v7jsi05ga2682cek9keqd5.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'EhnM6M9vFwiNSvI7Qehlbxfk'
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'ozxua_vq&v%f5ve)v2=7_-&lj1w@qi4izt$rcgnu!h%34e=5@5'
 

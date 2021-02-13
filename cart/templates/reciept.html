@@ -1,30 +1,37 @@
 {% load static %}
-<img src="https://pakibuy.herokuapp.com/static/app/images/pakibuy_logo_small.png"  height="50" weight="50"  alt="My image" />
+<img src="https://pakibuy.herokuapp.com/static/app/images/pakibuy_logo_small.png" height="50" weight="50" alt="My image" />
+<h1>Pakibuy</h1>
+<h2>Blk. 40 Lot 3 Brilyante Ace Gen. Merchandise </br>
+    Oscor Mart Evergreen Subd.</br>
+    Brgy. Gaya Gaya, CSJDM </br>
+    Bulacan</h2>
+
+<br/>
 <h1 style="border-bottom:1px solid #ccc">Purchase Receipt</h1>
 
 <table style="width:100%">
-{% for items in cartItems %}
+    {% for items in cartItems %}
     <tr>
         <td style="padding-top:5px;padding-left:5px;">
-            <b>{{items.product}}</b> 
+            <b>{{items.product}}</b>
         </td>
         <td>({{items.qty}} x Php. {{items.product.price}})</td>
     </tr>
-{% endfor %}
+    {% endfor %}
 </table>
 <table style="margin-top:50px;">
-<tbody>
-    <tr>
-        <td>Total Amount</td>
-        <td>{{total}}</td>
-    </tr>
-    <tr>
-        <td>Shipping Fee</td>
-        <td>{{shipping}}</td>
-    </tr>
-    <tr>
-        <td>Net Amount</td>
-        <td>{{net}}</td>
-    </tr>
-</tbody>
+    <tbody>
+        <tr>
+            <td>Total Amount</td>
+            <td>{{total}}</td>
+        </tr>
+        <tr>
+            <td>Shipping Fee</td>
+            <td>{{shipping}}</td>
+        </tr>
+        <tr>
+            <td>Net Amount</td>
+            <td>{{net}}</td>
+        </tr>
+    </tbody>
 </table>

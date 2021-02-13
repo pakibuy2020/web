@@ -51,7 +51,7 @@
         padding-bottom: 20px;
     }
     
-    .invoice-box table tr.item td{
+    .invoice-box table tr.item td {
         border-bottom: 1px solid #eee;
     }
     
@@ -70,15 +70,14 @@
             display: block;
             text-align: center;
         }
-        
         .invoice-box table tr.information table td {
             width: 100%;
             display: block;
             text-align: center;
         }
     }
-    
     /** RTL **/
+    
     .rtl {
         direction: rtl;
         font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
@@ -91,100 +90,99 @@
     .rtl table tr td:nth-child(2) {
         text-align: left;
     }
-    </style>
-	
-	<div class="invoice-box">
-        <table cellpadding="0" cellspacing="0">
-            <tr class="top">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td class="title">
-                                <img src="https://pakibuy.herokuapp.com/static/app/images/pakibuy_logo_small.png" style="width:100px;z-index:100">
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            
-            <tr class="information">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td>
-                                Pakibuy<br>
-                                Blk. 40 Lot 3 Brilyante Ace Gen. Merchandise </br>
-								Oscor Mart Evergreen Subd.</br>
-								Brgy. Gaya Gaya, CSJDM </br>
-								Bulacan
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            
-            <tr class="heading">
-                <td>
-                    Payment Method
-                </td>
-                
-                <td>
-                    
-                </td>
-            </tr>
-            
-            <tr class="details">
-                <td>
-                    Check
-                </td>
-                
-                <td>
-                    
-                </td>
-            </tr>
-            
-            <tr class="heading">
-                <td>
-                    Item
-                </td>
-                
-                <td>
-                    Price
-                </td>
-            </tr>
-            
-		{% for items in cartItems %}
-            <tr class="item">
-                <td>
-                    {{items.product}}
-                </td>
-                
-                <td>
-                    ({{items.qty}} x Php. {{items.product.price}})
-                </td>
-            </tr>
-		{% endfor %}
-		
-            <tr class="total">
-                <td></td>
-                
-                <td>
-                   Total: {{total}}
-                </td>
-            </tr>
-			 <tr class="total">
-                <td></td>
-                
-                <td>
-                   Shipping: {{shipping}}
-                </td>
-            </tr>
-			 <tr class="total">
-                <td></td>
-                
-                <td>
-                   Net: {{net}}
-                </td>
-            </tr>
-        </table>
-    </div>
+</style>
+
+<div class="invoice-box">
+    <table cellpadding="0" cellspacing="0">
+        <tr class="top">
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td class="title">
+                            <img src="https://pakibuy.herokuapp.com/static/app/images/pakibuy_logo_small.png" style="width:100px;z-index:100">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr class="information">
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td>
+                            Pakibuy<br> Blk. 40 Lot 3 Brilyante Ace Gen. Merchandise </br>
+                            Oscor Mart Evergreen Subd.</br>
+                            Brgy. Gaya Gaya, CSJDM </br>
+                            Bulacan
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr class="heading">
+            <td>
+                Payment Method
+            </td>
+
+            <td>
+
+            </td>
+        </tr>
+
+        <tr class="details">
+            <td>
+                {{paymentType}}
+            </td>
+
+            <td>
+
+            </td>
+        </tr>
+
+        <tr class="heading">
+            <td>
+                Item
+            </td>
+
+            <td>
+                Price
+            </td>
+        </tr>
+
+        {% for items in cartItems %}
+        <tr class="item">
+            <td>
+                {{items.product}}
+            </td>
+
+            <td>
+                ({{items.qty}} x Php. {{items.product.price}})
+            </td>
+        </tr>
+        {% endfor %}
+
+        <tr class="total">
+            <td></td>
+
+            <td>
+                Total: {{total}}
+            </td>
+        </tr>
+        <tr class="total">
+            <td></td>
+
+            <td>
+                Shipping: {{shipping}}
+            </td>
+        </tr>
+        <tr class="total">
+            <td></td>
+
+            <td>
+                Net: {{net}}
+            </td>
+        </tr>
+    </table>
+</div>

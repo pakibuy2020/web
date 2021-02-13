@@ -66,8 +66,10 @@ def print_reciept(request,cart_id):
         shipping = 'Php ' + str(100.00)
         net = 'Php ' + str(total + float(100.00))
 
+    payment = Payment.objects.get(cart=cart)
+    paymentType = str(Payment.PAYMENT_TYPE(payment.payment_type).name).lower()
 
-    context = {'cart':cart,'cartItems': cart_items,'total' : 'Php ' + str(total),'net': str(net),'shipping': shipping }
+    context = {'cart':cart,'cartItems': cart_items,'total' : 'Php ' + str(total),'net': str(net),'shipping': shipping,'paymentType':paymentType }
     
     
     pdf = render_to_pdf('reciept.html',context)

@@ -1,30 +1,190 @@
 {% load static %}
-<img src="https://pakibuy.herokuapp.com/static/app/images/pakibuy_logo_small.png"  height="50" weight="50"  alt="My image" />
-<h1 style="border-bottom:1px solid #ccc">Purchase Receipt</h1>
-
-<table style="width:100%">
-{% for items in cartItems %}
-    <tr>
-        <td style="padding-top:5px;padding-left:5px;">
-            <b>{{items.product}}</b> 
-        </td>
-        <td>({{items.qty}} x Php. {{items.product.price}})</td>
-    </tr>
-{% endfor %}
-</table>
-<table style="margin-top:50px;">
-<tbody>
-    <tr>
-        <td>Total Amount</td>
-        <td>{{total}}</td>
-    </tr>
-    <tr>
-        <td>Shipping Fee</td>
-        <td>{{shipping}}</td>
-    </tr>
-    <tr>
-        <td>Net Amount</td>
-        <td>{{net}}</td>
-    </tr>
-</tbody>
-</table>
+<style>
+    .invoice-box {
+        max-width: 800px;
+        margin: auto;
+        padding: 30px;
+        border: 1px solid #eee;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 16px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        color: #555;
+    }
+    
+    .invoice-box table {
+        width: 100%;
+        line-height: inherit;
+        text-align: left;
+    }
+    
+    .invoice-box table td {
+        padding: 5px;
+        vertical-align: top;
+    }
+    
+    .invoice-box table tr td:nth-child(2) {
+        text-align: right;
+    }
+    
+    .invoice-box table tr.top table td {
+        padding-bottom: 20px;
+    }
+    
+    .invoice-box table tr.top table td.title {
+        font-size: 45px;
+        line-height: 45px;
+        color: #333;
+    }
+    
+    .invoice-box table tr.information table td {
+        padding-bottom: 40px;
+    }
+    
+    .invoice-box table tr.heading td {
+        background: #eee;
+        border-bottom: 1px solid #ddd;
+        font-weight: bold;
+    }
+    
+    .invoice-box table tr.details td {
+        padding-bottom: 20px;
+    }
+    
+    .invoice-box table tr.item td{
+        border-bottom: 1px solid #eee;
+    }
+    
+    .invoice-box table tr.item.last td {
+        border-bottom: none;
+    }
+    
+    .invoice-box table tr.total td:nth-child(2) {
+        border-top: 2px solid #eee;
+        font-weight: bold;
+    }
+    
+    @media only screen and (max-width: 600px) {
+        .invoice-box table tr.top table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+        
+        .invoice-box table tr.information table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+    }
+    
+    /** RTL **/
+    .rtl {
+        direction: rtl;
+        font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    }
+    
+    .rtl table {
+        text-align: right;
+    }
+    
+    .rtl table tr td:nth-child(2) {
+        text-align: left;
+    }
+    </style>
+	
+	<div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td class="title">
+                                <img src="https://pakibuy.herokuapp.com/static/app/images/pakibuy_logo_small.png" style="width:100px;z-index:100">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                Pakibuy<br>
+                                Blk. 40 Lot 3 Brilyante Ace Gen. Merchandise </br>
+								Oscor Mart Evergreen Subd.</br>
+								Brgy. Gaya Gaya, CSJDM </br>
+								Bulacan
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr class="heading">
+                <td>
+                    Payment Method
+                </td>
+                
+                <td>
+                    
+                </td>
+            </tr>
+            
+            <tr class="details">
+                <td>
+                    Check
+                </td>
+                
+                <td>
+                    
+                </td>
+            </tr>
+            
+            <tr class="heading">
+                <td>
+                    Item
+                </td>
+                
+                <td>
+                    Price
+                </td>
+            </tr>
+            
+		{% for items in cartItems %}
+            <tr class="item">
+                <td>
+                    {{items.product}}
+                </td>
+                
+                <td>
+                    ({{items.qty}} x Php. {{items.product.price}})
+                </td>
+            </tr>
+		{% endfor %}
+		
+            <tr class="total">
+                <td></td>
+                
+                <td>
+                   Total: {{total}}
+                </td>
+            </tr>
+			 <tr class="total">
+                <td></td>
+                
+                <td>
+                   Shipping: {{shipping}}
+                </td>
+            </tr>
+			 <tr class="total">
+                <td></td>
+                
+                <td>
+                   Net: {{net}}
+                </td>
+            </tr>
+        </table>
+    </div>

@@ -67,15 +67,16 @@
 
 </div>
 
+{% for ass in backends.associated %}
+<input type="hidden" value="{{ ass.extra_data.email }}" id="cust_email" /> {% endfor %}
 
 <div id="hdata">
     {% for ass in backends.associated %}
     <input type="hidden" value="{{ ass.extra_data.email }}" id="cust_email" /> {% endfor %} {% csrf_token %}
 </div>
 <script>
-    const host = $(location).attr('host');
-    const base_url = `https://${host}/api/cart`;
-    const adderss_url = `https://${host}/cart`;
+    const base_url = 'http://localhost:8000/api/cart';
+    const adderss_url = 'http://localhost:8000/cart';
     const email = document.getElementById('cust_email').value;
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     $(document).ready(function() {
@@ -88,7 +89,7 @@
 		
 		$('#name_form').val(txtname)
 		$('#email_form').val(txtemail)
-		
+
         const formatter = new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'PHP',
@@ -117,8 +118,8 @@
             } else {
                 $("td#charges").html('<span style="color:red">PHP 100.00</span>');
                 net = sub + 100.00
-                $("td#net").html(`<span style="color:red">${formatter.format(net)}</span>`);
             }
+			$("td#net").html(`<span style="color:red">${formatter.format(net)}</span>`);
 
             console.log(net)
             console.log(sub)
@@ -157,6 +158,7 @@
         const address = document.getElementById('address_form').value;
         const contact = document.getElementById('contact_form').value;
 
+        console.log('Cod payment')
         $.ajax({
             url: base_url + '/payment/cod/',
             type: 'POST',
